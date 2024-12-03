@@ -32,36 +32,31 @@ const code = [
 ];
 
 const countSafe = (code) => {
-  //   if (code.length % 5 !== 0) return "code length invalid";
-  //   let safe = 0;
-  //   // sliding window
-  //   for (let i = 0; i < code.length; i += 5) {
-  //     let unsafe = 0;
-  //     for (let j = i; j < i + 4; j++) {
-  //       const curr = code[j];
-  //       const next = code[j + 1];
-  //       if (curr + 1 === next || curr + 2 === next) {
-  //         continue;
-  //       } else if (curr - 1 === next || curr - 2 === next) {
-  //         continue;
-  //       } else {
-  //         unsafe++;
-  //       }
-  //     }
-  //     if (unsafe === 5) safe++;
-  //     console.log(unsafe);
-  //   }
-  //   return safe;
-  /*
-    sliding window
-    if code[i+1] > code[i]
-        every num in window must be asc order
-    else 
-        every num in window in des order
-    if condition of +1 or +2 are true for whole window 
-        safeCount++
-    return safeCount
-    */
+  let safe = 0;
+
+  for (let i = 0; i < code.length; i += 5) {
+    const report = code.slice(i, i + 5);
+
+    const isIncreasing = report.every(
+      (_, idx) => idx === 0 || report[idx] > report[idx - 1]
+    );
+    const isDecreasing = report.every(
+      (_, idx) => idx === 0 || report[idx] < report[idx - 1]
+    );
+
+    const hasValidDiffs = report.every(
+      (_, idx) =>
+        idx === 0 ||
+        (Math.abs(report[idx] - report[idx - 1]) >= 1 &&
+          Math.abs(report[idx] - report[idx - 1]) <= 3)
+    );
+
+    if ((isIncreasing || isDecreasing) && hasValidDiffs) {
+      safe++;
+    }
+  }
+
+  return safe;
 };
 
 console.log(countSafe(code));
